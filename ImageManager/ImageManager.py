@@ -70,12 +70,16 @@ def get_image(imageid):
             return format_response(e.error_code, e.message)
 
 
-@image.route('/image/<imageid>/binary', methods=['GET'])
-def get_image_binary(imageid):
+@image.route('/image/<imageid>/binary/<type>', methods=['GET'])
+def get_image_binary(imageid, type):
     try:
         tenant = init_tenant_context(request, db, minioClient)
         orm_image = assert_image_exists(imageid)
-        filename = imageid + '.hex'
+        filename = imageid 
+        if type == 'bin':
+            filename = imageid + '.bin'
+        else:
+            filename = imageid + '.hex'
         if not orm_image.confirmed:
             raise HTTPRequestError(404, "Image does not have an binary file")
         minioClient.fget_object(tenant, filename, os.path.join('/tmp/', filename))
