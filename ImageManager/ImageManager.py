@@ -75,11 +75,8 @@ def get_image_binary(imageid, type):
     try:
         tenant = init_tenant_context(request, db, minioClient)
         orm_image = assert_image_exists(imageid)
-        filename = imageid 
-        if type == 'bin':
-            filename = imageid + '.bin'
-        else:
-            filename = imageid + '.hex'
+        filename = imageid + '.bin'
+       
         if not orm_image.confirmed:
             raise HTTPRequestError(404, "Image does not have an binary file")
         minioClient.fget_object(tenant, filename, os.path.join('/tmp/', filename))
@@ -100,7 +97,7 @@ def delete_image(imageid):
         data = image_schema.dump(orm_image)
 
         if orm_image.confirmed:
-            minioClient.remove_object(tenant, imageid + '.hex')
+            minioClient.remove_object(tenant, imageid + '.bin')
         db.session.delete(orm_image)
         db.session.commit()
 
@@ -118,7 +115,7 @@ def delete_image_binary(imageid):
     try:
         tenant = init_tenant_context(request, db, minioClient)
         orm_image = assert_image_exists(imageid)
-        minioClient.remove_object(tenant, imageid + '.hex')
+        minioClient.remove_object(tenant, imageid + '.bin')
         orm_image.confirmed = False
         db.session.commit()
 
