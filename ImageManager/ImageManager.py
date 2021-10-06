@@ -70,7 +70,7 @@ def get_image(imageid):
             return format_response(e.error_code, e.message)
 
 
-@image.route('/image/<imageid>/binary/<type>', methods=['GET'])
+@image.route('/image/<imageid>/binary/', methods=['GET'])
 def get_image_binary(imageid, type):
     try:
         tenant = init_tenant_context(request, db, minioClient)
