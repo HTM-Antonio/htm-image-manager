@@ -71,7 +71,7 @@ def get_image(imageid):
 
 
 @image.route('/image/<imageid>/binary/', methods=['GET'])
-def get_image_binary(imageid, type):
+def get_image_binary(imageid):
     try:
         tenant = init_tenant_context(request, db, minioClient)
         orm_image = assert_image_exists(imageid)
